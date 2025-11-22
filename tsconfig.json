@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        // Crucial for Node.js ESM
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        // Or "ES2022" / "ESNext" depending on your Node.js version
+        "target": "ES2022",
+        // This is essential for debugging
+        "sourceMap": true,
+        // Directory for compiled JavaScript files (e.g., "dist" or "out")
+        "outDir": "./dist",
+        // Ensure Node.js ESM imports work cleanly
+        "esModuleInterop": true
+        // Add "type": "module" to your package.json
+    }
+}

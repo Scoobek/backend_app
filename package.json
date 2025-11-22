@@ -1,0 +1,30 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node --loader ts-node/esm src/server.ts",
+        "dev:debugger": "nodemon --watch src/ --ext ts --exec 'npm run build & npm run dev'",
+        "build": "tsc -w -p tsconfig.json"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "express": "^5.1.0",
+        "express-validator": "^7.3.0",
+        "jsonwebtoken": "^9.0.2",
+        "nodemailer": "^7.0.10"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.5",
+        "@types/mongodb": "^4.0.7",
+        "@types/node": "^24.10.1",
+        "mongodb": "^7.0.0",
+        "nodemon": "^3.1.11",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
+    }
+}

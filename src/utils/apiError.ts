@@ -1,5 +1,5 @@
-class ApiError extends Error {
-    status: number;
+export class ApiError extends Error {
+    public status: number;
     constructor(message, status) {
         super(message);
 

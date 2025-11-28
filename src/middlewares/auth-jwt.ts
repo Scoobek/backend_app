@@ -1,35 +1,59 @@
 //authorizatrion -> refreshing tokens
+import { ObjectId } from "mongodb";
+import { type Response, type Request, raw } from "express";
 import jwt from "jsonwebtoken";
-import { Response } from "express";
+
 import authConfig from "../config/auth.config.js";
 
-export async function verifyToken(request: Request, response: Response, next) {
-    const token =
-        request.headers["x-access-token"] || request.headers["authorization"];
+import { UserJwtPayload } from "../types/jwt.types.js";
 
-    if (!token) {
+const verifyToken = async (request: Request, response: Response, next) => {
+    const rawHeader =
+        request.headers["x-access-token"] ||
+        (request.headers["authorization"] as string);
+
+    if (!rawHeader) {
         return response.status(403).json({
             status: false,
             message: "No token",
         });
     }
 
+    let tokenString: string = "";
+
+    Array.isArray(rawHeader)
+        ? (tokenString = rawHeader[0])
+        : (tokenString = rawHeader);
+
+    const token = tokenString.startsWith("Bearer ")
+        ? tokenString.split(" ")[1]
+        : tokenString;
+
     try {
-        const decoded = jwt.verify(
-            token.replace("Bearer ", ""),
+        const decodedToken = jwt.verify(
+            token,
             authConfig.secret
-        );
+        ) as UserJwtPayload;
 
-        //TODO
+        const dateNow = new Date();
+        const tokenExiredDate = new Date(decodedToken.exp);
 
-        // request.userId = decoded.id
+        if (dateNow > tokenExiredDate) throw Error("Token has expired");
 
-        //check in DB
+        const user = {
+            userId: decodedToken.id,
+            email: decodedToken.email,
+        };
+
+        request.user = user;
 
         next();
-    } catch (e) {
-        return response.status(401).json({
+    } catch (error) {
+        console.error(new Error("Error occures ", { cause: error.message }));
+        response.status(401).json({
             message: "Unauthorized!",
         });
     }
-}
+};
+
+export default verifyToken;

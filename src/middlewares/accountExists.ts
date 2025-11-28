@@ -1,6 +1,7 @@
-import { type Request } from "express";
-import { COLLECTION_NAME, getDb } from "../config/db.config.js";
-import { User } from "../user/user.type.js";
+import { type Request, type Response } from "express";
+
+import { COLLECTION_USERS, getDb } from "../config/db.config.js";
+import { IAuthUser, IUserDocument } from "../user/types.js";
 
 export async function accountExists(
     request: Request,
@@ -10,11 +11,26 @@ export async function accountExists(
     try {
         const { email } = request.body;
 
-        const user = await getDb().collection<User>(COLLECTION_NAME).findOne({
-            email,
-        });
+        const user = await getDb()
+            .collection<IUserDocument>(COLLECTION_USERS)
+            .findOne(
+                {
+                    email,
+                },
+                {
+                    projection: {
+                        _id: 1,
+                        email: 1,
+                        role: 1,
+                    },
+                }
+            );
 
-        request.user = user;
+        request.user = {
+            email: user.email,
+            userId: user._id.toString(),
+        };
+
         next();
     } catch (error) {
         console.error(new Error("Error occures ", { cause: error.message }));

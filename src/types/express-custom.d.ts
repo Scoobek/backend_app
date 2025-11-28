@@ -1,8 +1,8 @@
 import express from "express";
-import { User } from "../user/user.type.ts";
+import { IAuthUser } from "../user/types.ts";
 
 declare module "express" {
     export interface Request {
-        user?: User | null;
+        user: IAuthUser | null;
     }
 }

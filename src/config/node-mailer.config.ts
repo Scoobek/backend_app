@@ -15,7 +15,7 @@ export async function sendMail(addressMail: string, generatedCode: number) {
         from: '"Won$$" <januszwonss@o2.pl>',
         to: addressMail,
         subject: "Password recorvery",
-        text: `This is yours 6-digit generatedCode for new password generation ${generatedCode}, below is link to reset password form:`, // plain‑text body,
+        text: `This is yours 6-digit generatedCode for new password generation ${generatedCode}, below is link to reset password form:`,
     });
 
     console.error("Message sent:", info.messageId);

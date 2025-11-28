@@ -5,7 +5,10 @@ const DB_URL = "mongodb://127.0.0.1:27017";
 let dbInstance: Db | undefined;
 let clientDbInstance: MongoClient | undefined;
 
-export const COLLECTION_NAME = "proba";
+export const DB_NAME = "proba";
+export const COLLECTION_USERS = "users";
+export const COLLECTION_TASKS = "tasks";
+export const COLLECTION_PASSWORD_RECOVERY = "password";
 
 export const connectDB = async () => {
     try {
@@ -13,7 +16,7 @@ export const connectDB = async () => {
 
         await clientDbInstance.connect();
 
-        dbInstance = clientDbInstance.db(COLLECTION_NAME);
+        dbInstance = clientDbInstance.db(DB_NAME);
     } catch (error) {
         console.error(
             new Error("Problem with db connection ", { cause: error.message })

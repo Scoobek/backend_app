@@ -9,5 +9,5 @@ export async function comparePasswords(
     password: string,
     hashedPassword: string
 ) {
-    return await bcrypt.compare(hashedPassword, password);
+    return await bcrypt.compare(password, hashedPassword);
 }

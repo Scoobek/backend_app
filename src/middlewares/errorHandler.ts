@@ -1,15 +1,23 @@
-const errorHandler = (err, req, res, next) => {
-    const statusCode = err.status || 500;
+import { NextFunction, Request, Response } from "express";
+import { ApiError } from "../utils/apiError.js";
 
-    console.error(`[${statusCode} ERROR] ${err.name}: ${err.message}`);
+type CustomError = ApiError | Error;
 
-    res.status(statusCode).json({
+const errororHandler = (
+    error: CustomError,
+    request: Request,
+    response: Response
+) => {
+    const statusCode = error instanceof ApiError ? error.status : 500;
+
+    console.error(`[${statusCode} ERROR] ${error.name}: ${error.message}`);
+
+    response.status(statusCode).json({
         success: false,
         status: statusCode,
-        message: err.message || "An unexpected error occurred.",
-        // good to implement \/
-        stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+        message: error.message || "An unexpected error occurred.",
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
 };
 
-export default errorHandler;
+export default errororHandler;

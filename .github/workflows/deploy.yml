@@ -3,7 +3,7 @@ name: Deploy Node.js to EC2
 on:
     push:
         branches:
-            - main
+            - master
 
 jobs:
     deploy:
@@ -20,7 +20,9 @@ jobs:
                   key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
                   script: |
                       cd /var/www/app                   # Navigate to your app directory
-                      git pull origin main              # Pull the latest code
+                      git pull origin master              # Pull the latest code
                       npm install
+                      npm run build
+                      npm run 
                       # Optional: Run build command if needed (e.g., npm run build)
                       pm2 restart node-app              # Restart the application using PM2

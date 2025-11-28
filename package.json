@@ -7,7 +7,8 @@
     "scripts": {
         "dev": "node --loader ts-node/esm src/server.ts",
         "dev:debugger": "nodemon --watch src/ --ext ts --exec 'npm run build & npm run dev'",
-        "build": "tsc -w -p tsconfig.json"
+        "build": "tsc -w -p tsconfig.json",
+        "production": "pm2 start dist/server.js --name my-app"
     },
     "author": "",
     "license": "ISC",

@@ -19,10 +19,9 @@ jobs:
                   username: ec2-user
                   key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
                   script: |
-                      cd /var/www/app                   # Navigate to your app directory
-                      git pull origin master              # Pull the latest code
+                      cd /var/www/app                   
+                      git pull origin master              
                       npm install
-                      npm run build
-                      npm run 
-                      # Optional: Run build command if needed (e.g., npm run build)
-                      pm2 restart node-app              # Restart the application using PM2
+                      npm run build:aws
+
+                      pm2 startOrRestart ecosystem.config.js --env production

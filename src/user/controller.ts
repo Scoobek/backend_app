@@ -45,7 +45,7 @@ export async function signUp(
 
 export async function signIn(request: Request, response: Response, next) {
     if (!request.user) {
-        return next(new NotFoundError("Wrong email or password"));
+        return next(new UnauthorizedError("Wrong email or password"));
     }
 
     try {

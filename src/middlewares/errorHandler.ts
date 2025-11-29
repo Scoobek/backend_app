@@ -6,7 +6,8 @@ type CustomError = ApiError | Error;
 const errororHandler = (
     error: CustomError,
     request: Request,
-    response: Response
+    response: Response,
+    next: NextFunction
 ) => {
     const statusCode = error instanceof ApiError ? error.status : 500;
 

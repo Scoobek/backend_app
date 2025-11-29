@@ -1,7 +1,7 @@
 import { type Request, type Response } from "express";
 
 import { COLLECTION_USERS, getDb } from "../config/db.config.js";
-import { IAuthUser, IUserDocument } from "../user/types.js";
+import { IUserDocument } from "../user/types.js";
 
 export async function accountExists(
     request: Request,
@@ -26,7 +26,7 @@ export async function accountExists(
                 }
             );
 
-        request.user = {
+        request.user = user && {
             email: user.email,
             userId: user._id.toString(),
         };

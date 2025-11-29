@@ -1,5 +1,11 @@
 import { ObjectId, Document } from "mongodb";
 
+type IUserPasswordHistory = {
+    passwordHash: string;
+    retiredAt: number | null;
+    createdAt: number;
+};
+
 export interface IUser {
     name: string;
     email: string;
@@ -9,12 +15,6 @@ export interface IUser {
     passwordHash: string;
     passwordHistory: IUserPasswordHistory[];
 }
-
-type IUserPasswordHistory = {
-    passwordHash: string;
-    retiredAt: number | null;
-    createdAt: number;
-};
 
 export interface IAuthUser {
     userId: string;

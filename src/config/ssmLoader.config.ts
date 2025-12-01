@@ -4,9 +4,15 @@ import {
     GetParameterCommandInput,
 } from "@aws-sdk/client-ssm";
 
+import { SSM_PATHS } from "../constans/ssm-paths.js";
+import { AppSecrets, SsmParameterPath } from "../types/app-secrets.type.js";
+
 const ssmClient = new SSMClient({ region: process.env.AWS_REGION });
 
-async function getSmmParameter(name: string, decrypt = false): Promise<string> {
+async function getSmmParameter(
+    name: SsmParameterPath,
+    decrypt = false
+): Promise<string> {
     const params: GetParameterCommandInput = {
         Name: name,
         WithDecryption: decrypt,
@@ -26,11 +32,36 @@ async function getSmmParameter(name: string, decrypt = false): Promise<string> {
     }
 }
 
-export async function loadSecrets() {
-    const [NODE_ENV, PORT] = await Promise.all([
-        getSmmParameter("NODE_ENV"),
-        getSmmParameter("PORT"),
-    ]);
+export async function loadSecrets(): Promise<AppSecrets> {
+    const paths = Object.values(SSM_PATHS);
 
-    return { NODE_ENV, PORT };
+    const promises = paths.map((path) => getSmmParameter(path));
+
+    const values = await Promise.all(promises);
+
+    const [
+        AWS_REGION,
+        DB_NAME,
+        DB_URL,
+        JWT_SECRET,
+        NODE_ENV,
+        PORT,
+        SMTP_HOST,
+        SMTP_PASSWORD,
+        SMTP_PORT,
+        SMTP_USER,
+    ] = values;
+
+    return {
+        AWS_REGION,
+        DB_NAME,
+        DB_URL,
+        JWT_SECRET,
+        NODE_ENV,
+        PORT,
+        SMTP_HOST,
+        SMTP_PASSWORD,
+        SMTP_PORT,
+        SMTP_USER,
+    };
 }

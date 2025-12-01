@@ -2,17 +2,20 @@ import "./config/envLoader.config.js";
 
 import express, { type Request, type Response } from "express";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import { connectDB } from "./config/db.config.js";
+import { loadSecrets } from "./config/ssmLoader.config.js";
 
-import { tasksRouter } from "./tasks/tasks.routes.js";
+//middlewares
 import verifyToken from "./middlewares/auth-jwt.js";
+import errororHandler from "./middlewares/errorHandler.js";
+
+//routes
+import { passwordRecoveryRoutes } from "./password-recovery/routes.js";
+import { tasksRouter } from "./tasks/tasks.routes.js";
 import userRoutes from "./user/routes.js";
 
-import { passwordRecoveryRoutes } from "./password-recovery/routes.js";
-import { fileURLToPath } from "url";
-import { loadSecrets } from "./config/ssmLoader.config.js";
-import errororHandler from "./middlewares/errorHandler.js";
 import { NotFoundError } from "./errors/apiError.js";
 
 async function bootstrap() {
@@ -29,8 +32,10 @@ async function bootstrap() {
 
             console.log(secrets);
 
-            process.env.NODE_ENV = secrets.NODE_ENV;
-            process.env.PORT = secrets.PORT;
+            //set key value pairs
+            for (const [key, value] of Object.entries(secrets)) {
+                process.env[key] = value;
+            }
         }
 
         const PORT = process.env.PORT || 3000;

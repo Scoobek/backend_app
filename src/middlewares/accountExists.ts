@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 
-import { COLLECTION_USERS, getDb } from "../config/db.config.js";
+import { COLLECTIONS } from "../constans/db.js";
+import { getDb } from "../config/db.config.js";
 import { IUserDocument } from "../user/types.js";
 
 export async function accountExists(
@@ -12,7 +13,7 @@ export async function accountExists(
         const { email } = request.body;
 
         const user = await getDb()
-            .collection<IUserDocument>(COLLECTION_USERS)
+            .collection<IUserDocument>(COLLECTIONS.USERS)
             .findOne(
                 {
                     email,

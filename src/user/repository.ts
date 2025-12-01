@@ -1,16 +1,17 @@
 import { UpdateFilter } from "mongodb";
-import { COLLECTION_USERS, getDb } from "../config/db.config.js";
+import { getDb } from "../config/db.config.js";
 import { IUser, IUserDocument } from "./types.js";
+import { COLLECTIONS } from "../constans/db.js";
 
 class UserRepository {
     private async getCollection() {
         const db = getDb();
-        return db.collection<IUserDocument>(COLLECTION_USERS);
+        return db.collection<IUserDocument>(COLLECTIONS.USERS);
     }
 
     async createUser(newUserData: IUser) {
         return await getDb()
-            .collection<IUser>(COLLECTION_USERS)
+            .collection<IUser>(COLLECTIONS.USERS)
             .insertOne({ ...newUserData });
     }
 

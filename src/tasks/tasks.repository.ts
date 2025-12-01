@@ -1,15 +1,15 @@
 import { ObjectId } from "mongodb";
 
-import { COLLECTION_TASKS, getDb } from "../config/db.config.js";
-
-import { ITaskDocument, IUserTasks, PatchTask } from "./tasks.types.js";
+import { COLLECTIONS } from "../constans/db.js";
+import { getDb } from "../config/db.config.js";
 import { IAuthUser } from "../user/types.js";
+import { ITaskDocument, IUserTasks, PatchTask } from "./tasks.types.js";
 
 class TaskRepository {
     private async getCollection() {
         const db = await getDb();
 
-        return db.collection<IUserTasks>(COLLECTION_TASKS);
+        return db.collection<IUserTasks>(COLLECTIONS.TASKS);
     }
 
     async getAllTasks(userId: IAuthUser["userId"]) {

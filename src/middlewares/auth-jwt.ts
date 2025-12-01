@@ -3,8 +3,6 @@ import { ObjectId } from "mongodb";
 import { type Response, type Request, raw } from "express";
 import jwt from "jsonwebtoken";
 
-import authConfig from "../config/auth.config.js";
-
 import { UserJwtPayload } from "../types/jwt.types.js";
 
 const verifyToken = async (request: Request, response: Response, next) => {
@@ -32,7 +30,7 @@ const verifyToken = async (request: Request, response: Response, next) => {
     try {
         const decodedToken = jwt.verify(
             token,
-            authConfig.secret
+            process.env.JWT_SECRET
         ) as UserJwtPayload;
 
         const dateNow = new Date();

@@ -1,17 +1,18 @@
-import { COLLECTION_PASSWORD_RECOVERY, getDb } from "../config/db.config.js";
+import { COLLECTIONS } from "../constans/db.js";
+import { getDb } from "../config/db.config.js";
+import { IUserDocument } from "../user/types.js";
 
 import {
     IPasswordRecoveryAttempt,
     IPasswordRecoveryDocument,
 } from "./types.js";
-import { IUserDocument } from "../user/types.js";
 
 class PasswordRecoveryRepository {
     private async getCollection() {
         const db = getDb();
 
         return db.collection<IPasswordRecoveryDocument>(
-            COLLECTION_PASSWORD_RECOVERY
+            COLLECTIONS.PASSWORD_RECORVERY
         );
     }
 

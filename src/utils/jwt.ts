@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 
-import authConfig from "../config/auth.config.js";
-
 import { IAuthUser } from "../user/types.js";
 
 const createAccessToken = (userId: IAuthUser["userId"], email: string) => {
@@ -11,7 +9,7 @@ const createAccessToken = (userId: IAuthUser["userId"], email: string) => {
         id: userId,
     };
 
-    return jwt.sign(customClaims, authConfig.secret, {
+    return jwt.sign(customClaims, process.env.JWT_SECRET, {
         // 10 minutes
         expiresIn: 10 * 60 * 1000,
     });

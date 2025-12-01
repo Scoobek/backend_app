@@ -24,4 +24,4 @@ jobs:
                       npm install
                       npm run build:aws
 
-                      pm2 startOrRestart ecosystem.config.json --env production --set-env AWS_REGION=us-east-1
+                      pm2 startOrRestart ecosystem.config.json --env production

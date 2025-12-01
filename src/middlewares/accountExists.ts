@@ -26,10 +26,12 @@ export async function accountExists(
                 }
             );
 
-        request.user = user && {
-            email: user.email,
-            userId: user._id.toString(),
-        };
+        request.user = user
+            ? {
+                  email: user.email,
+                  userId: user._id.toString(),
+              }
+            : null;
 
         next();
     } catch (error) {

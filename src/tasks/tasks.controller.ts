@@ -6,7 +6,7 @@ import {
     EditTaskRequestBody,
 } from "./tasks.types.js";
 
-import { BadRequest } from "../utils/apiError.js";
+import { BadRequest } from "../errors/apiError.js";
 import { tasksService } from "./tasks.service.js";
 
 export const getAllTasks = async (

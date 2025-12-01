@@ -4,7 +4,7 @@ import {
     ConflictError,
     NotFoundError,
     UnauthorizedError,
-} from "../utils/apiError.js";
+} from "../errors/apiError.js";
 import {
     SetNewPasswordBodyPayload,
     SignUpBodyPayload,

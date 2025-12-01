@@ -5,7 +5,11 @@ import {
     PasswordRecoveryLinkBodyPayload,
 } from "../types/request-body.type.js";
 
-import { BadRequest, ConflictError, NotFoundError } from "../utils/apiError.js";
+import {
+    BadRequest,
+    ConflictError,
+    NotFoundError,
+} from "../errors/apiError.js";
 
 import { passwordRecoveryService } from "./services.js";
 

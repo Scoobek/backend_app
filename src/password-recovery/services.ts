@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 import { sendMail } from "../config/node-mailer.config.js";
 
-import { ConflictError, UnauthorizedError } from "../utils/apiError.js";
+import { ConflictError, UnauthorizedError } from "../errors/apiError.js";
 
 import { passwordRecoveryRepository } from "./repository.js";
 import { IAuthUser } from "../user/types.js";
@@ -18,7 +18,10 @@ class PasswordRecoveryService {
 
         const timeNow = new Date().getTime();
 
-        if (lastAttemptTimeStampResult.passwordRecoveryAttempts.length > 0) {
+        if (
+            lastAttemptTimeStampResult &&
+            lastAttemptTimeStampResult.passwordRecoveryAttempts.length > 0
+        ) {
             if (
                 lastAttemptTimeStampResult.passwordRecoveryAttempts[0]
                     .timeStamp > timeNow

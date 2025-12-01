@@ -8,7 +8,7 @@ import {
 } from "../types/request-body.type.js";
 
 import { comparePasswords, hashPassword } from "../utils/password.js";
-import { UnauthorizedError } from "../utils/apiError.js";
+import { UnauthorizedError } from "../errors/apiError.js";
 import createAccessToken from "../utils/jwt.js";
 
 import { userRepository } from "./repository.js";

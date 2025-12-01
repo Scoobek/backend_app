@@ -11,7 +11,14 @@ const errororHandler = (
 ) => {
     const statusCode = error instanceof ApiError ? error.status : 500;
 
-    console.error(`[${statusCode} ERROR] ${error.name}: ${error.message}`);
+    if (process.env.NODE_ENV === "development") {
+        console.error(`[${statusCode} ERROR] ${error.name}: ${error.message}`);
+    } else {
+        // Only log critical server errors in production
+        if (statusCode === 500) {
+            console.error("SERVER ERROR:", error.message);
+        }
+    }
 
     response.status(statusCode).json({
         success: false,

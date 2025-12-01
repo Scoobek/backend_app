@@ -1,3 +1,5 @@
+import "./config/envLoader.config.js";
+
 import express, { type Request, type Response } from "express";
 import path from "path";
 
@@ -9,44 +11,70 @@ import userRoutes from "./user/routes.js";
 
 import { passwordRecoveryRoutes } from "./password-recovery/routes.js";
 import { fileURLToPath } from "url";
+import { loadSecrets } from "./config/ssmLoader.config.js";
+import errororHandler from "./middlewares/errorHandler.js";
+import { NotFoundError } from "./errors/apiError.js";
 
-const PORT = process.env.port || 3000;
+async function bootstrap() {
+    try {
+        // setups
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const publicPath = path.join(__dirname, "../../client/public");
 
-const app = express();
+        //production on
+        if (process.env.NODE_ENV === "production") {
+            //secrets
+            const secrets = await loadSecrets();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+            console.log(secrets);
 
-connectDB();
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "../../client/public")));
-
-const publicPath = path.join(__dirname, "../../client/public");
-
-app.use("/api", userRoutes);
-app.use("/api", tasksRouter);
-app.use("/api", passwordRecoveryRoutes);
-
-app.get("/", verifyToken, (req: Request, res: Response) => {
-    res.sendFile(path.join(publicPath, "index.html"), (err) => {
-        if (err) {
-            console.error("Error sending file:", err);
-            res.status(500).send("Could not load the main page.");
+            process.env.NODE_ENV = secrets.NODE_ENV;
+            process.env.PORT = secrets.PORT;
         }
-    });
-});
 
-app.use((req, res, next) => {
-    res.status(404).send("Sorry, can't find that route!");
-});
+        const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, (error) => {
-    if (error) {
-        console.error("error occures");
+        //database connection
+        await connectDB();
+
+        //express routes
+        const app = express();
+
+        app.use(express.json());
+        app.use(express.static(publicPath));
+
+        // routes
+        app.use("/api", userRoutes);
+        app.use("/api", tasksRouter);
+        app.use("/api", passwordRecoveryRoutes);
+
+        app.get("/", verifyToken, (req: Request, res: Response) => {
+            res.sendFile(path.join(publicPath, "index.html"));
+        });
+
+        app.use((req, res, next) => {
+            const error = new NotFoundError("Sorry, can't find that route!");
+
+            next(error);
+        });
+
+        app.use(errororHandler);
+
+        app.listen(PORT, (error) => {
+            if (error) {
+                console.error("error occures");
+                throw error;
+            }
+            console.log("server working at", PORT);
+        });
+    } catch (error) {
+        console.error("CRITICAL: Failed to bootstrap application.", error);
+        process.exit(1);
     }
-    console.log("server working at", PORT);
-});
+}
+
+bootstrap();
 
 process.on("uncaughtException", (err, origin) => {
     console.error(`Uncaught Exception at ${origin}:`, err);
